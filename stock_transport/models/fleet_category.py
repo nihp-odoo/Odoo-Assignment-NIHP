@@ -1,6 +1,5 @@
 from odoo import api,fields, models
 
-
 class fleetCategory(models.Model):
     _inherit = "fleet.vehicle.model.category"
 

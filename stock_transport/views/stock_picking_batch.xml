@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- form view of batch transfers -->
     <record id="stock_picking_batch_form_inherited" model="ir.ui.view">
         <field name="name">stock.picking.batch.form.inherit.stock.transport</field>
         <field name="model">stock.picking.batch</field>
         <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
         <field name="arch" type="xml">
             <xpath expr = "//field[@name='scheduled_date']" position="after">
+                <field name="dock"/>
                 <field name="vehicle"/>
                 <field name="vehicle_category" invisible = "False"/>
                 <field name="weight" widget="progressbar" invisible = "not vehicle_category"/>
@@ -14,6 +16,7 @@
         </field>
     </record>
 
+    <!-- graph view -->
     <record id="view_stock_picking_batch_graph" model="ir.ui.view">
         <field name="name">stock.picking.batch.graph</field>
         <field name="model">stock.picking.batch</field>
@@ -22,15 +25,36 @@
                 <field name="scheduled_date"/>
                 <field name="volume"/>
                 <field name="weight"/>
-                <field name="picking_ids"/>
-                <field name="move_line_ids"/>
+                <field name="transfers"/>
+                <field name="lines"/>
                 <field name="vehicle_category"/>
             </graph>
         </field>
     </record>
 
+    <!-- gantt view -->
+    <record id="view_stock_picking_batch_gantt" model="ir.ui.view">
+        <field name="name">stock.picking.batch.gantt</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <gantt date_start="scheduled_date"
+                date_stop="scheduled_date"
+                default_scale="week"
+                scales="day,week,month,year"
+                string="Batch Gantt View"
+                color="dock"
+                decoration-info="state in ['draft', 'done']"
+                pill_label = "True"
+                default_group_by="dock,vehicle">
+                <field name="state"/>
+                <field name="vehicle_category"/>
+            </gantt>
+        </field>
+    </record>
+
     <!-- inherited action -->
     <record id="stock_picking_batch.stock_picking_batch_action" model="ir.actions.act_window">
-        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="view_mode">tree,kanban,form,graph,gantt</field>
     </record>
 </odoo>
